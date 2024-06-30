@@ -1,7 +1,6 @@
-﻿namespace CeramWorkshop.Data.Domain.InterfacesWorker
+﻿namespace CeramWorkshop.Data.Domain.InterfacesWorker;
+
+public interface IWorkerBase
 {
-    public interface IWorkerBase
-    {
-        Task<int> Completed(CancellationToken cancellationToken = default);
-    }
+    Task<int> Completed(CancellationToken cancellationToken = default);
 }

@@ -11,11 +11,11 @@
 <FluentGrid>
     <FluentGridItem sm="12">
         @foreach (var recoveryCode in RecoveryCodes)
-        {
-            <div>
+    {
+        <div>
                 <code class="recovery-code">@recoveryCode</code>
             </div>
-        }
+    }
 
     </FluentGridItem>
 
@@ -23,9 +23,9 @@
 
 
 @code {
-    [Parameter]
-    public string[] RecoveryCodes { get; set; } = [];
+[Parameter]
+public string[] RecoveryCodes { get; set; } = [];
 
-    [Parameter]
-    public string? StatusMessage { get; set; }
+[Parameter]
+public string? StatusMessage { get; set; }
 }

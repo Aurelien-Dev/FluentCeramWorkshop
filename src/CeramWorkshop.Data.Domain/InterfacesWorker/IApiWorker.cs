@@ -1,9 +1,8 @@
 ﻿using CeramWorkshop.Data.Domain.InterfacesRepository;
 
-namespace CeramWorkshop.Data.Domain.InterfacesWorker
+namespace CeramWorkshop.Data.Domain.InterfacesWorker;
+
+public  interface IApiWorker : IWorkerBase
 {
-    public  interface IApiWorker : IWorkerBase
-    {
-        IImageInstructionRepository ImageInstructionRepository { get; }
-    }
+    IImageInstructionRepository ImageInstructionRepository { get; }
 }
