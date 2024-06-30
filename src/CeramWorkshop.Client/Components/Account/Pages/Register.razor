@@ -3,14 +3,15 @@
 @using System.ComponentModel.DataAnnotations
 @using System.Text
 @using System.Text.Encodings.Web
+@using CeramWorkshop.Client.DataIdentity.Models
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
 @using CeramWorkshop.Client.DataIdentity
 
-@inject UserManager<ApplicationUser> UserManager
-@inject IUserStore<ApplicationUser> UserStore
-@inject SignInManager<ApplicationUser> SignInManager
-@inject IEmailSender<ApplicationUser> EmailSender
+@inject UserManager<Workshop> UserManager
+@inject IUserStore<Workshop> UserStore
+@inject SignInManager<Workshop> SignInManager
+@inject IEmailSender<Workshop> EmailSender
 @inject ILogger<Register> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
@@ -28,8 +29,18 @@
             <hr />
             <FluentValidationSummary class="text-danger" role="alert" />
             <FluentStack Orientation="Orientation.Vertical">
-                <FluentTextField Name="Input.Email" @bind-Value="Input.Email" AutoComplete="username" Required="true" Placeholder="name@example.com" Label="Email" Style="width: 100%" />
+                <FluentTextField Name="Input.WorkshopName" @bind-Value="Input.WorkshopName" AutoComplete="WorkshopName" Required="true" Label="Workshop name" Style="width: 100%" />
+                <FluentValidationMessage For="() => Input.WorkshopName" class="text-danger" />
+
+                <FluentTextField Name="Input.Email" @bind-Value="Input.Email" AutoComplete="email" Required="true" Placeholder="name@example.com" Label="Email" Style="width: 100%" />
                 <FluentValidationMessage For="() => Input.Email" class="text-danger" />
+
+                <FluentTextField Name="Input.Name" @bind-Value="Input.Name" AutoComplete="username" Required="true" Label="Name" Style="width: 100%" />
+                <FluentValidationMessage For="() => Input.Name" class="text-danger" />
+
+                <FluentTextField Name="Input.LastName" @bind-Value="Input.LastName" AutoComplete="userlastname" Required="true" Label="Last name" Style="width: 100%" />
+                <FluentValidationMessage For="() => Input.LastName" class="text-danger" />
+
                 <FluentTextField type="password" Name="Input.Password" @bind-Value="Input.Password" AutoComplete="current-password" Required="true" Placeholder="password" Label="Password" Style="width: 100%" />
                 <FluentValidationMessage For="() => Input.Password" class="text-danger" />
                 <FluentTextField type="password" Name="Input.ConfirmPassword" @bind-Value="Input.ConfirmPassword" AutoComplete="new-password" Required="true" Placeholder="password" Label="Confirm Password" Style="width: 100%" />
@@ -93,26 +104,31 @@
         RedirectManager.RedirectTo(ReturnUrl);
     }
 
-    private ApplicationUser CreateUser()
+    private Workshop CreateUser()
     {
         try
         {
-            return Activator.CreateInstance<ApplicationUser>();
+            Workshop workshop = Activator.CreateInstance<Workshop>();
+            workshop.Name = Input.Name;
+            workshop.LastName = Input.LastName;
+            workshop.WorkshopName = Input.WorkshopName;
+
+            return workshop;
         }
         catch
         {
-            throw new InvalidOperationException($"Can't create an instance of '{nameof(ApplicationUser)}'. " +
-                $"Ensure that '{nameof(ApplicationUser)}' is not an abstract class and has a parameterless constructor.");
+            throw new InvalidOperationException($"Can't create an instance of '{nameof(Workshop)}'. " +
+                $"Ensure that '{nameof(Workshop)}' is not an abstract class and has a parameterless constructor.");
         }
     }
 
-    private IUserEmailStore<ApplicationUser> GetEmailStore()
+    private IUserEmailStore<Workshop> GetEmailStore()
     {
         if (!UserManager.SupportsUserEmail)
         {
             throw new NotSupportedException("The default UI requires a user store with email support.");
         }
-        return (IUserEmailStore<ApplicationUser>)UserStore;
+        return (IUserEmailStore<Workshop>)UserStore;
     }
 
     private sealed class InputModel
@@ -121,6 +137,18 @@
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; } = "";
+
+        [Required]
+        [Display(Name = "Name")]
+        public string Name { get; set; } = "";
+
+        [Required]
+        [Display(Name = "Last name")]
+        public string LastName { get; set; } = "";
+
+        [Required]
+        [Display(Name = "Workshop name")]
+        public string WorkshopName { get; set; } = "";
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]

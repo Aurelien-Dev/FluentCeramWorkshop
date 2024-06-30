@@ -1,11 +1,12 @@
 ﻿@page "/Account/Manage"
 
 @using System.ComponentModel.DataAnnotations
+@using CeramWorkshop.Client.DataIdentity.Models
 @using Microsoft.AspNetCore.Identity
 @using CeramWorkshop.Client.DataIdentity
 
-@inject UserManager<ApplicationUser> UserManager
-@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<Workshop> UserManager
+@inject SignInManager<Workshop> SignInManager
 @inject IdentityUserAccessor UserAccessor
 @inject IdentityRedirectManager RedirectManager
 
@@ -18,17 +19,28 @@
     <FluentGridItem xs="12" sm="6">
         <EditForm Model="Input" FormName="profile" OnValidSubmit="OnValidSubmitAsync" method="post">
             <DataAnnotationsValidator />
+
             <FluentValidationSummary class="text-danger" role="alert" />
             <FluentTextField Value="@username" Placeholder="Please choose your username." Disabled Label="Username" Appearance=FluentInputAppearance.Filled Style="width: 100%" />
+
             <FluentTextField Name="Input.PhoneNumber" @bind-Value="Input.PhoneNumber" Paceholder="Please enter your phone number." Label="Phone number" Style="width: 100%" />
             <FluentValidationMessage For="() => Input.PhoneNumber" class="text-danger" />
+
+            <FluentTextField Name="Input.Name" @bind-Value="Input.Name" Label="Name" Style="width: 100%" />
+            <FluentValidationMessage For="() => Input.Name" class="text-danger" />
+
+            <FluentTextField Name="Input.LastName" @bind-Value="Input.LastName" Label="Last name" Style="width: 100%" />
+            <FluentValidationMessage For="() => Input.LastName" class="text-danger" />
+
             <FluentButton Type="ButtonType.Submit" Appearance="Appearance.Accent" Style="width: 100%;">Save</FluentButton>
         </EditForm>
     </FluentGridItem>
 </FluentGrid>
 
 @code {
-    private ApplicationUser user = default!;
+    private Workshop user = default!;
+    private string? lastname;
+    private string? name;
     private string? username;
     private string? phoneNumber;
 
@@ -45,6 +57,9 @@
         phoneNumber = await UserManager.GetPhoneNumberAsync(user);
 
         Input.PhoneNumber ??= phoneNumber;
+        Input.Name ??= user.Name;
+        Input.LastName ??= user.LastName;
+        Input.WorkshopName ??= user.WorkshopName;
     }
 
     private async Task OnValidSubmitAsync()
@@ -58,6 +73,12 @@
             }
         }
 
+        user.LastName = Input.LastName;
+        user.Name = Input.Name;
+        user.PhoneNumber = Input.PhoneNumber;
+
+        await UserManager.UpdateAsync(user);
+
         await SignInManager.RefreshSignInAsync(user);
         RedirectManager.RedirectToCurrentPageWithStatus("Your profile has been updated", HttpContext);
     }
@@ -67,5 +88,17 @@
         [Phone]
         [Display(Name = "Phone number")]
         public string? PhoneNumber { get; set; }
+
+        [Display(Name = "Name")]
+        [Required]
+        public string? Name { get; set; }
+
+        [Display(Name = "Last name")]
+        [Required]
+        public string? LastName { get; set; }
+
+        [Display(Name = "Workshop name")]
+        [Required]
+        public string? WorkshopName { get; set; }
     }
 }

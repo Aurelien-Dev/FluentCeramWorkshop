@@ -1,7 +1,8 @@
-﻿@using Microsoft.AspNetCore.Identity
+﻿@using CeramWorkshop.Client.DataIdentity.Models
+@using Microsoft.AspNetCore.Identity
 @using CeramWorkshop.Client.DataIdentity
 
-@inject SignInManager<ApplicationUser> SignInManager
+@inject SignInManager<Workshop> SignInManager
 
 <FluentNavMenu Collapse="false">
     <FluentNavLink Href="Account/Manage" Match="NavLinkMatch.All">Profile</FluentNavLink>

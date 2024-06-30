@@ -1,6 +1,6 @@
 using CeramWorkshop.Client.Components.Account.Pages;
 using CeramWorkshop.Client.Components.Account.Pages.Manage;
-using CeramWorkshop.Client.DataIdentity;
+using CeramWorkshop.Client.DataIdentity.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http.Extensions;
@@ -23,7 +23,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
 
         accountGroup.MapPost("/PerformExternalLogin", (
             HttpContext context,
-            [FromServices] SignInManager<ApplicationUser> signInManager,
+            [FromServices] SignInManager<Workshop> signInManager,
             [FromForm] string provider,
             [FromForm] string returnUrl) =>
         {
@@ -52,7 +52,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
 
         accountGroup.MapPost("/Logout", async (
             ClaimsPrincipal user,
-            SignInManager<ApplicationUser> signInManager,
+            SignInManager<Workshop> signInManager,
             [FromForm] string returnUrl) =>
         {
             await signInManager.SignOutAsync();
@@ -63,7 +63,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
 
         manageGroup.MapPost("/LinkExternalLogin", async (
             HttpContext context,
-            [FromServices] SignInManager<ApplicationUser> signInManager,
+            [FromServices] SignInManager<Workshop> signInManager,
             [FromForm] string provider) =>
         {
             // Clear the existing external cookie to ensure a clean login process
@@ -83,7 +83,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
 
         manageGroup.MapPost("/DownloadPersonalData", async (
             HttpContext context,
-            [FromServices] UserManager<ApplicationUser> userManager,
+            [FromServices] UserManager<Workshop> userManager,
             [FromServices] AuthenticationStateProvider authenticationStateProvider) =>
         {
             var user = await userManager.GetUserAsync(context.User);
@@ -97,7 +97,7 @@ internal static class IdentityComponentsEndpointRouteBuilderExtensions
 
             // Only include personal data for download
             var personalData = new Dictionary<string, string>();
-            var personalDataProps = typeof(ApplicationUser).GetProperties().Where(
+            var personalDataProps = typeof(Workshop).GetProperties().Where(
                 prop => Attribute.IsDefined(prop, typeof(PersonalDataAttribute)));
             foreach (var p in personalDataProps)
             {

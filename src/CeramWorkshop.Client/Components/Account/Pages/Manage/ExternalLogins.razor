@@ -1,13 +1,14 @@
 ﻿@page "/Account/Manage/ExternalLogins"
 
+@using CeramWorkshop.Client.DataIdentity.Models
 @using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
 @using CeramWorkshop.Client.DataIdentity
 
-@inject UserManager<ApplicationUser> UserManager
-@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<Workshop> UserManager
+@inject SignInManager<Workshop> SignInManager
 @inject IdentityUserAccessor UserAccessor
-@inject IUserStore<ApplicationUser> UserStore
+@inject IUserStore<Workshop> UserStore
 @inject IdentityRedirectManager RedirectManager
 
 <PageTitle>Manage your external logins</PageTitle>
@@ -66,7 +67,7 @@
 @code {
 public const string LinkLoginCallbackAction = "LinkLoginCallback";
 
-private ApplicationUser user = default!;
+private Workshop user = default!;
 private IList<UserLoginInfo>? currentLogins;
 private IList<AuthenticationScheme>? otherLogins;
 private bool showRemoveButton;
@@ -92,7 +93,7 @@ protected override async Task OnInitializedAsync()
         .ToList();
 
     string? passwordHash = null;
-    if (UserStore is IUserPasswordStore<ApplicationUser> userPasswordStore)
+        if (UserStore is IUserPasswordStore<Workshop> userPasswordStore)
     {
         passwordHash = await userPasswordStore.GetPasswordHashAsync(user, HttpContext.RequestAborted);
     }

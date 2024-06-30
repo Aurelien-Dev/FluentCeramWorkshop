@@ -1,6 +1,7 @@
 using CeramWorkshop.Client.Components;
 using CeramWorkshop.Client.Components.Account;
 using CeramWorkshop.Client.DataIdentity;
+using CeramWorkshop.Client.DataIdentity.Models;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -30,15 +31,15 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 
-builder.Services.AddDbContext<ApplicationIdentityDbContext>(options => options.UseSqlServer(connectionString));
+builder.Services.AddDbContext<ApplicationIdentityDbContext>(options => options.UseSqlServer(connectionString), ServiceLifetime.Transient);
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+builder.Services.AddIdentityCore<Workshop>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationIdentityDbContext>()
     .AddSignInManager()
     .AddDefaultTokenProviders();
 
-builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+builder.Services.AddSingleton<IEmailSender<Workshop>, IdentityNoOpEmailSender>();
 
 var app = builder.Build();
 

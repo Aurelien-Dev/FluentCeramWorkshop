@@ -4,6 +4,7 @@ using CeramWorkshop.Client.DataIdentity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CeramWorkshop.Client.DataIdentity.Migrations
 {
     [DbContext(typeof(ApplicationIdentityDbContext))]
-    partial class DataIdentityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240630182145_AddUserInfo")]
+    partial class AddUserInfo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

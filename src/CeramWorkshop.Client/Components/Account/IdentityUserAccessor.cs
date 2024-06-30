@@ -1,11 +1,11 @@
-using CeramWorkshop.Client.DataIdentity;
+using CeramWorkshop.Client.DataIdentity.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace CeramWorkshop.Client.Components.Account;
 
-internal sealed class IdentityUserAccessor(UserManager<ApplicationUser> userManager, IdentityRedirectManager redirectManager)
+internal sealed class IdentityUserAccessor(UserManager<Workshop> userManager, IdentityRedirectManager redirectManager)
 {
-    public async Task<ApplicationUser> GetRequiredUserAsync(HttpContext context)
+    public async Task<Workshop> GetRequiredUserAsync(HttpContext context)
     {
         var user = await userManager.GetUserAsync(context.User);
 

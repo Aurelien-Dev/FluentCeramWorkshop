@@ -1,8 +1,24 @@
-﻿@inherits LayoutComponentBase
+﻿@using CeramWorkshop.Client.DataIdentity
+@using CeramWorkshop.Client.DataIdentity.Models
+@using Microsoft.AspNetCore.Identity
+@using System.Security.Claims
+@using Microsoft.EntityFrameworkCore
+@inherits LayoutComponentBase
 
 <FluentLayout>
     <FluentHeader>
         CeramWorkshop.Client
+        <FluentSpacer />
+        <AuthorizeView>
+            <Authorized>
+                <FluentPersona ImageSize="50px" Initials="@connectedWorkshop?.GetInitials()">
+                </FluentPersona>
+            </Authorized>
+            <NotAuthorized>
+                <FluentNavLink Href="Account/Register">Register</FluentNavLink>
+                <FluentNavLink Href="Account/Login">Login</FluentNavLink>
+            </NotAuthorized>
+        </AuthorizeView>
     </FluentHeader>
     <FluentStack Class="main" Orientation="Orientation.Horizontal" Width="100%">
         <NavMenu />
@@ -24,3 +40,29 @@
     <a href="" class="reload">Reload</a>
     <a class="dismiss">🗙</a>
 </div>
+
+
+@code {
+
+    [Inject] ApplicationIdentityDbContext? _applicationIdentityDbContext { get; set; }
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? authenticationState { get; set; }
+
+    Workshop? connectedWorkshop;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (authenticationState is not null)
+        {
+            var aauthState = await authenticationState;
+            var uuser = aauthState?.User;
+
+            if (uuser?.Identity is not null && uuser.Identity.IsAuthenticated)
+            {
+                connectedWorkshop = await _applicationIdentityDbContext.Users.FirstOrDefaultAsync(u => u.Email == uuser.Identity.Name);
+            }
+        }
+    }
+}
